@@ -61,6 +61,7 @@ class Mysql
      */
     public static function exec($sql, $bindParam = [])
     {
+        $sql = self::trimQuery($sql);
 
         /** @var \PDO $conn */
         $conn = self::getConnect();
@@ -98,7 +99,6 @@ class Mysql
         }
 
         $stmt->execute();
-
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
 
         // error_log($sql . PHP_EOL . var_export($bindParam, true) . PHP_EOL . var_export($bindParamInt, true) . PHP_EOL, 3, LOG_FILE);
@@ -141,12 +141,10 @@ class Mysql
         foreach ($data as $key => $val):
             $fields[] = "`{$key}`";
             $values[] = ":{$key}";
-
             $bindParams[":{$key}"] = $val;
         endforeach;
 
         $sql = "INSERT INTO {$table}(" . join(',', $fields) . ") VALUES (" . join(',', $values) . ")";
-        $sql = self::trimQuery($sql);
 
         return self::exec($sql, $bindParams);
     }
@@ -172,7 +170,6 @@ class Mysql
         endforeach;
 
         $sql = "UPDATE {$table} SET " . join(',', $fieldsSet) . " WHERE " . join(',', $fieldsWhere);
-        $sql = self::trimQuery($sql);
 
         return self::exec($sql, $bindParams);
     }
@@ -192,7 +189,6 @@ class Mysql
         endforeach;
 
         $sql = "DELETE FROM {$table} WHERE " . join(',', $fieldsWhere);
-        $sql = self::trimQuery($sql);
 
         return self::exec($sql, $bindParams);
     }
