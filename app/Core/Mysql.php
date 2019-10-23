@@ -45,6 +45,33 @@ class Mysql
     }
 
     /**
+     * @param $sql
+     * @return mixed|string|string[]|null
+     */
+    public static function trimQuery($sql){
+        $sql = str_replace(PHP_EOL, '', $sql);
+        $sql = preg_replace('#(\s+)#', ' ', $sql);
+        return $sql;
+    }
+
+    /**
+     * @param $sql
+     * @param array $bindParam
+     * @return bool|\PDOStatement
+     */
+    public static function exec($sql, $bindParam = [])
+    {
+
+        /** @var \PDO $conn */
+        $conn = self::getConnect();
+        $stmt = $conn->prepare($sql);
+        $stmt->execute($bindParam);
+
+        // error_log($sql . PHP_EOL . var_export($bindParam, true) . PHP_EOL, 3, LOG_FILE);
+        return $stmt;
+    }
+
+    /**
      * @param string $sql
      * @param array $bindParam
      * @param array $bindParamInt
@@ -52,8 +79,7 @@ class Mysql
      */
     public static function _select($sql = '', $bindParam = [], $bindParamInt = [])
     {
-        $sql = str_replace(PHP_EOL, '', $sql);
-        $sql = preg_replace('#(\s+)#', ' ', $sql);
+        $sql = self::trimQuery($sql);
 
         /** @var \PDO $conn */
         $conn = self::getConnect();
@@ -75,7 +101,7 @@ class Mysql
 
         $stmt->setFetchMode(\PDO::FETCH_OBJ);
 
-        // error_log($sql . PHP_EOL . var_export($bindParam, true) . PHP_EOL . var_export($bindParamInt, true).PHP_EOL, 3, LOG_FILE);
+        // error_log($sql . PHP_EOL . var_export($bindParam, true) . PHP_EOL . var_export($bindParamInt, true) . PHP_EOL, 3, LOG_FILE);
         return $stmt;
     }
 
@@ -103,4 +129,71 @@ class Mysql
         return $stmt->fetch();
     }
 
+    /**
+     * @param string $table
+     * @param array $data
+     * @return bool|\PDOStatement
+     */
+    public static function insert($table = '', $data = [])
+    {
+        $fields = $values = $bindParams = [];
+
+        foreach ($data as $key => $val):
+            $fields[] = "`{$key}`";
+            $values[] = ":{$key}";
+
+            $bindParams[":{$key}"] = $val;
+        endforeach;
+
+        $sql = "INSERT INTO {$table}(" . join(',', $fields) . ") VALUES (" . join(',', $values) . ")";
+        $sql = self::trimQuery($sql);
+
+        return self::exec($sql, $bindParams);
+    }
+
+    /**
+     * @param string $table
+     * @param array $data
+     * @param array $where
+     * @return bool|\PDOStatement
+     */
+    public static function update($table = '', $data = [], $where = [])
+    {
+        $fieldsSet = $fieldsWhere = $bindParams = [];
+
+        foreach ($data as $key => $val):
+            $fieldsSet[] = "`{$key}`=:{$key}";
+            $bindParams[":{$key}"] = $val;
+        endforeach;
+
+        foreach ($where as $key => $val):
+            $fieldsWhere[] = "`{$key}`=:{$key}";
+            $bindParams[":{$key}"] = $val;
+        endforeach;
+
+        $sql = "UPDATE {$table} SET " . join(',', $fieldsSet) . " WHERE " . join(',', $fieldsWhere);
+        $sql = self::trimQuery($sql);
+
+        return self::exec($sql, $bindParams);
+    }
+
+    /**
+     * @param $table
+     * @param array $where
+     * @return bool|\PDOStatement
+     */
+    public static function delete($table, $where = [])
+    {
+        $fieldsWhere = $bindParams = [];
+
+        foreach ($where as $key => $val):
+            $fieldsWhere[] = "`{$key}`=:{$key}";
+            $bindParams[":{$key}"] = $val;
+        endforeach;
+
+        $sql = "DELETE FROM {$table} WHERE " . join(',', $fieldsWhere);
+        $sql = self::trimQuery($sql);
+
+        return self::exec($sql, $bindParams);
+    }
 }

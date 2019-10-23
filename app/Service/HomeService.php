@@ -30,6 +30,24 @@ class HomeService
 
         $data = Mysql::selectAll($sql, $bindForSql, $bindIntForSql);
 
+
+        // TODO: insert
+        /*Mysql::insertBind('users', [
+            'name'=> 'thuannd',
+            'email'=> 'thuannd@gmail.com',
+            'password'=> 'secrect',
+            'status'=> 1,
+        ]);*/
+
+        // TODO: update
+        /*Mysql::update('users', [
+            'name' => 'thuannd - pure',
+            'password' => md5('secrect'),
+        ], ['id' => 208]);*/
+
+        // TODO: delete
+        Mysql::delete('users', ['id' => 208]);
+
         return [
             'data' => $data,
         ];

@@ -1,2 +1,2 @@
-# PHP native
+# PHP core pure
 
