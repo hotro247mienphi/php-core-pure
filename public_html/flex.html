@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <style>
+        #module {
+            margin-bottom: 50px;
+        }
+
+        .flex-container {
+            display: flex;
+            background-color: DodgerBlue;
+        }
+
+        .flex-container > div {
+            background-color: #f1f1f1;
+            margin: 10px;
+            width: 100px;
+            text-align: center;
+            line-height: 75px;
+            font-size: 30px;
+        }
+    </style>
+</head>
+
+<body>
+<h1>Flexible Boxes</h1>
+
+<div id="module">
+    <label>Property:</label>
+    <select id="flex-property"></select>
+
+    <label style="margin-left: 50px">Value:</label>
+    <select id="flex-property-value"></select>
+</div>
+
+<p id="print">Try to resize the browser window.</p>
+
+
+<div class="flex-container">
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+    <div>8</div>
+</div>
+
+
+<script>
+    /**
+     * Demo Flex module layout css with javascript
+     *
+     */
+    (function (doc, config) {
+
+        const log = console.log;
+        const ELEMENTS = {
+            _MODULE: getById(config.eleHtmlSelector.dModule),
+            _PRINT: getById(config.eleHtmlSelector.pPrint),
+            _PROPERTY: getById(config.eleHtmlSelector.sProperty),
+            _VALUE: getById(config.eleHtmlSelector.sValue),
+            _CONTAINER: doc.querySelector(config.eleHtmlSelector.dContainer),
+        };
+
+        const flex = {
+            flexDirection: {
+                name: 'flex-derection',
+                properties: {
+                    column: 'column',
+                    columnReverse: 'column-reverse',
+                    row: 'row',
+                    rowReverse: 'row-reverse'
+                }
+            },
+            flexWrap: {
+                name: 'flex-wrap',
+                properties: {
+                    wrap: 'wrap',
+                    nowrap: 'nowrap',
+                    wrapReverse: 'wrap-reverse'
+                }
+            },
+            flexFlow: {
+                name: 'flex-flow',
+                properties: {
+                    rowWrap: 'row wrap'
+                }
+            },
+            justifyContent: {
+                name: 'justify-content',
+                properties: {
+                    center: 'center',
+                    flexStart: 'flex-start',
+                    flexEnd: 'flex-end',
+                    spaceAround: 'space-around',
+                    spaceBetween: 'space-between',
+                }
+            },
+            alignItems: {
+                name: 'align-items',
+                properties: {
+                    center: 'center',
+                    flexStart: 'flex-start',
+                    flexEnd: 'flex-end',
+                    stretch: 'stretch',
+                    baseline: 'baseline',
+                }
+            },
+            alignContent: {
+                name: 'align-content',
+                properties: {
+                    spaceBetween: 'space-between',
+                    spaceAround: 'space-around',
+                    stretch: 'stretch',
+                    center: 'center',
+                    flexStart: 'flex-start',
+                    flexEnd: 'flex-end',
+                }
+            }
+        };
+
+        /** get element by id */
+        function getById(id) {
+            return doc.getElementById(id);
+        }
+
+        /** add option to tag select properties */
+        function addOptionFlexPropertySelect() {
+            for (let key in flex) {
+                let opt = doc.createElement('option');
+                opt.setAttribute('value', key);
+                opt.appendChild(doc.createTextNode(flex[key].name));
+                ELEMENTS._PROPERTY.appendChild(opt);
+            }
+        }
+
+        /** add option to tag select flex property value */
+        function addOptionToFlexValueSelect() {
+
+            let property = ELEMENTS._PROPERTY.value;
+
+            if (!(property in flex)) {
+                log(property, 'not in flex properties');
+                return;
+            }
+
+            ELEMENTS._VALUE.innerHTML = null;
+            const props = flex[property];
+            for (let key in props.properties) {
+                let opt = doc.createElement('option');
+                opt.setAttribute('value', props.properties[key]);
+                opt.appendChild(doc.createTextNode(props.properties[key]));
+                ELEMENTS._VALUE.appendChild(opt);
+            }
+        }
+
+        /** set style apply flex to container div and print property  */
+        function applyAndPrint() {
+            setStyle();
+            printData();
+        }
+
+        /** get value of select tag */
+        function getValue() {
+            return {
+                key: ELEMENTS._PROPERTY.value,
+                value: ELEMENTS._VALUE.value
+            };
+        }
+
+        /** set style */
+        function setStyle() {
+            const data = getValue();
+            ELEMENTS._CONTAINER.style[data.key] = data.value;
+        }
+
+        /** print select tag value */
+        function printData() {
+            const data = getValue();
+            ELEMENTS._PRINT.innerHTML = '<code>' + data.key + ':' + data.value + '</code>';
+        }
+
+        /** trigger event for element HTML */
+        function triggerEvent(ele, eventName) {
+            ele.dispatchEvent(new Event(eventName));
+        }
+
+        /** add event listenener */
+        function addEvents() {
+            ELEMENTS._PROPERTY.addEventListener('change', function () {
+                addOptionToFlexValueSelect();
+                applyAndPrint();
+            }, false);
+
+            ELEMENTS._VALUE.addEventListener('change', function () {
+                applyAndPrint();
+            }, false);
+        }
+
+        /** function initial */
+        function initial() {
+
+            for (let item of Object.keys(ELEMENTS)) {
+                if (!ELEMENTS[item]) {
+                    log('element container not found');
+                }
+            }
+
+            addOptionFlexPropertySelect();
+            addOptionToFlexValueSelect();
+            addEvents();
+
+            triggerEvent(ELEMENTS._VALUE, 'change');
+        }
+
+        initial();
+
+    })(document, {
+        eleHtmlSelector: {
+            dContainer: '.flex-container',
+            dModule: 'module',
+            pPrint: 'print',
+            sProperty: 'flex-property',
+            sValue: 'flex-property-value',
+        },
+    });
+
+</script>
+
+<script>
+    const log = console.log;
+
+    /**
+     * {
+     *      url: 'https://jsonplaceholder.typicode.com/posts',
+     *      method: 'POST',
+     *      type: 'json',
+     *      data: { year: 1990, month: 02 },
+     *      timeout: 1e4
+     * }
+     */
+
+    function request(params) {
+
+        /**
+         * @var {any} agr input data
+         * @var {string} type typeof data
+         */
+
+        function _is(agr, type) {
+            return Object.prototype.toString.call(agr) !== "[object " + type + "]"
+        }
+
+        function _buildQueryString(obj) {
+
+            if (_is(obj, "Object")) {
+                return "";
+            }
+
+            const arr = [];
+            for (let key in obj) {
+                arr.push(key + '=' + obj[key]);
+            }
+
+            return arr.join("&");
+        }
+
+        return new Promise(function (resovel, reject) {
+
+            try {
+                const
+                    METHOD_GET = "GET",
+                    METHOD_POST = "POST",
+                    METHOD_PUT = "PUT",
+                    METHOD_PATCH = "PATCH",
+                    METHOD_DELETE = "DELETE",
+
+                    STR_EMPTY = "",
+                    typeValid = ["arraybuffer", "bolb", "document", "json", "text", "ms-stream"],
+                    methodValid = [METHOD_GET, METHOD_POST, METHOD_PUT, METHOD_PATCH, METHOD_DELETE];
+
+                const
+                    url = (params.url || STR_EMPTY).trim(),
+                    data = params.data || {},
+                    type = (params.type || STR_EMPTY).toLowerCase(),
+                    method = (params.method || METHOD_GET).toUpperCase(),
+                    timeout = parseInt(params.timeout || 15e3);
+
+                if (url.length === 0) {
+                    throw new Error("URL request can not empty.");
+                }
+
+                if (!~methodValid.indexOf(method)) {
+                    throw new Error("METHOD request is not support.");
+                }
+
+                if (type.length > 0 && !~typeValid.indexOf(type)) {
+                    throw new Error("TYPE of request is not support.");
+                }
+
+                /**
+                 * XMLHttpRequest: code for modern browsers
+                 * ActiveXObject: code for old IE browsers
+                 */
+                const xmlhttp = (window.XMLHttpRequest) ? new XMLHttpRequest() : new ActiveXObject("Microsoft.XMLHTTP");
+
+                xmlhttp.timeout = timeout;
+                xmlhttp.responseType = type;
+
+                switch (method.toUpperCase()) {
+                    case METHOD_POST:
+                        xmlhttp.open(METHOD_POST, url);
+                        xmlhttp.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+                        xmlhttp.send(_buildQueryString(data));
+                        break;
+                    case METHOD_PUT:
+                        break;
+                    case METHOD_PATCH:
+                        break;
+                    case METHOD_DELETE:
+                        break;
+                    case METHOD_GET:
+                    default:
+                        xmlhttp.open(METHOD_GET, url + "?" + _buildQueryString(data));
+                        xmlhttp.send();
+                        break;
+                }
+
+
+                { /** add event */
+
+                    /** handler event state change */
+                    xmlhttp.onreadystatechange = function () {
+
+                        if (xmlhttp.readyState === 4) {
+
+                            if (xmlhttp.status === 200) {
+                                resovel({
+                                    code: xmlhttp.status,
+                                    status: "success",
+                                    response: xmlhttp.response
+                                });
+                            } else {
+                                reject({
+                                    code: xmlhttp.status,
+                                    status: "fail"
+                                });
+                            }
+                        }
+
+                    };
+
+                    /** handler event abort */
+                    xmlhttp.onabort = function () {
+                        reject({
+                            code: xmlhttp.status,
+                            status: "abort"
+                        });
+                    };
+
+                    /** handler event timeout */
+                    xmlhttp.ontimeout = function () {
+                        reject({
+                            code: xmlhttp.status,
+                            status: "timeout"
+                        });
+                    };
+
+                    /** handler event error */
+                    xmlhttp.onerror = function () {
+                        reject({
+                            code: xmlhttp.status,
+                            status: "error"
+                        });
+                    };
+
+                }
+
+            } catch (err) {
+                log(reject);
+                reject(err.message);
+            }
+
+        });
+    }
+
+    /**
+     * DEMO REQUEST
+     * ---------------------------------------------------------
+     */
+    request({
+        url: 'https://jsonplaceholder.typicode.com/posts',
+        method: 'POST',
+        type: 'json',
+        data: {
+            id: 1202,
+            age: 30,
+            nick: 'ducthuan1202'
+        },
+        timeout: 1e4
+    }).then(function (data) {
+        log('success', data);
+    }).catch(function (err) {
+        log('error', err);
+    });
+
+</script>
+</body>
+
+</html>
