@@ -203,8 +203,7 @@ class Layout
      */
     public function inc($path)
     {
-        $fullPath = VIEWS_PATH . '/' . $path . '.php';
-        if (file_exists($fullPath)) {
+        if (file_exists($fullPath = VIEWS_PATH . '/' . $path . '.php')) {
             include "$fullPath";
         }
     }

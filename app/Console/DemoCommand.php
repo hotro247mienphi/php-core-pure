@@ -28,6 +28,7 @@ class DemoCommand extends Command
 
         $userService = new UserService();
         $data = var_export($userService->dataIndexAction(), true);
+
         file_put_contents(LOG_PATH.'/app-demo.log', $data .PHP_EOL, FILE_APPEND);
 
         $output->write('success');
