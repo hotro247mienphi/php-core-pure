@@ -30,14 +30,9 @@ class Mysql
 
     public static function connect()
     {
-        $servername = env('DB_HOST', 'localhost');
-        $username = env('DB_USERNAME', 'root');
-        $password = env('DB_PASSWORD', '');
-        $dbname = env('DB_DATABASE', 'test');
-        $charset = env('DB_CHARSET', 'utf8');
-
+        $db = Config::get('db');
         try {
-            self::$instance = new \PDO("mysql:host=$servername;dbname=$dbname;charset=$charset", $username, $password);
+            self::$instance = new \PDO("mysql:host={$db['host']};dbname={$db['name']};charset={$db['charset']}", $db['user'], $db['pass']);
             self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
         } catch (\PDOException $e) {
             error_log($e->getMessage(), 3, ERROR_FILE);
@@ -48,7 +43,8 @@ class Mysql
      * @param $sql
      * @return mixed|string|string[]|null
      */
-    public static function trimQuery($sql){
+    public static function trimQuery($sql)
+    {
 
         $sql = str_replace(PHP_EOL, '', $sql);
         $sql = preg_replace('#(\s+)#', ' ', $sql);
@@ -59,7 +55,7 @@ class Mysql
     /**
      * @param $sql
      * @param array $bindParam
-     * @return bool|\PDOStatement
+     * @return \PDO
      */
     public static function exec($sql, $bindParam = [])
     {
@@ -71,7 +67,7 @@ class Mysql
         $stmt->execute($bindParam);
 
         // error_log($sql . PHP_EOL . var_export($bindParam, true) . PHP_EOL, 3, LOG_FILE);
-        return $stmt;
+        return $conn;
     }
 
     /**
@@ -135,8 +131,21 @@ class Mysql
 
     /**
      * @param string $table
+     * @param null $id
+     * @return mixed
+     */
+    public static function findById($table = '', $id = null)
+    {
+        $sql = "SELECT * FROM {$table} WHERE id = :id";
+        $sql = self::trimQuery($sql);
+        $stmt = self::_select($sql, ['id' => $id]);
+        return $stmt->fetch();
+    }
+
+    /**
+     * @param string $table
      * @param array $data
-     * @return bool|\PDOStatement
+     * @return \PDO
      */
     public static function insert($table = '', $data = [])
     {
@@ -157,7 +166,7 @@ class Mysql
      * @param string $table
      * @param array $data
      * @param array $where
-     * @return bool|\PDOStatement
+     * @return \PDO
      */
     public static function update($table = '', $data = [], $where = [])
     {
@@ -181,7 +190,7 @@ class Mysql
     /**
      * @param $table
      * @param array $where
-     * @return bool|\PDOStatement
+     * @return \PDO
      */
     public static function delete($table, $where = [])
     {

@@ -15,11 +15,11 @@ class Controller
 
     /**
      * Controller constructor.
+     * @param Layout $layout
      */
-    public function __construct()
+    public function __construct(Layout $layout)
     {
-        $this->layout = new Layout();
-        $this->layout->controller = $this->getControllerName();
+        $this->layout = $layout;
     }
 
     /**
@@ -44,6 +44,23 @@ class Controller
     }
 
     /**
+     * @param $url
+     * @param int $code
+     */
+    protected function redirect($url, $code = 302)
+    {
+        header("Location: {$url}", $code);
+    }
+
+    /**
+     * back to url
+     */
+    protected function back()
+    {
+        $this->redirect($_SERVER['HTTP_REFERER']);
+    }
+
+    /**
      * @param $data
      * @return false|string
      */
@@ -52,15 +69,6 @@ class Controller
         header('Content-Type: application/json');
 
         return json_encode($data);
-    }
-
-    /**
-     * @return string|string[]|null
-     */
-    protected function getControllerName()
-    {
-        $section = explode(DIRECTORY_SEPARATOR, get_class($this));
-        return preg_replace('/^(.*)Controller$/', '${1}', end($section));
     }
 
 }

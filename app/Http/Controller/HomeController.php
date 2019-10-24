@@ -6,7 +6,6 @@ use App\Console\DemoCommand;
 use App\Core\CommandInline;
 use App\Service\HomeService;
 
-
 /**
  * Class HomeController
  * @package App\Http\Controller
@@ -16,7 +15,6 @@ class HomeController extends Controller
 
     /**
      * @return false|string
-     * @throws \Exception
      */
     public function index()
     {
@@ -26,22 +24,9 @@ class HomeController extends Controller
 
         $shared = $homeService->dataIndexAction();
 
-        dump($shared);
+        // CommandInline::run(DemoCommand::class);
 
         return $this->render('home.index', $shared);
-    }
-
-    /**
-     * @param $id
-     * @return false|string
-     */
-    public function info($id)
-    {
-        $this->setTitle('Info page');
-
-        CommandInline::run(DemoCommand::class);
-
-        return $this->render('home.info', ['id' => $id]);
     }
 
 }

@@ -10,7 +10,7 @@
                 <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/info/1202">Info 1202</a>
+                <a class="nav-link" href="/users/create">Create User</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" href="/api/json">Api json</a>

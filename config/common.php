@@ -1,5 +1,24 @@
 <?php
 
+use App\Core\Route;
+
+if (!function_exists('arr_get')) {
+    /**
+     * @param array $arr
+     * @param string $key
+     * @param null $default
+     * @return mixed|null
+     */
+    function arr_get($arr = [], $key = '', $default = null)
+    {
+        if (array_key_exists($key, $arr) || isset($arr[$key])) {
+            return $arr[$key];
+        }
+
+        return $default;
+    }
+}
+
 if (!function_exists('shutdown')) {
     /**
      * function callback when shutdown
@@ -118,7 +137,7 @@ if (!function_exists('get_full_url')) {
      */
     function get_full_url()
     {
-        if(get_uri() !== '/'){
+        if (get_uri() !== '/') {
             return get_domain_url() . get_uri();
         }
         return get_domain_url();
@@ -176,5 +195,18 @@ if (!function_exists('asset_path')) {
     function asset_path($path = '')
     {
         return get_domain_url() . '/assets/' . $path;
+    }
+}
+
+if (!function_exists('route')) {
+
+    /**
+     * @param string $name
+     * @param array $params
+     * @return string
+     */
+    function route($name = '', $params = [])
+    {
+        return Route::generate($name, $params);
     }
 }
