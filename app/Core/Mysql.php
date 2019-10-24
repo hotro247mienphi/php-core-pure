@@ -49,8 +49,10 @@ class Mysql
      * @return mixed|string|string[]|null
      */
     public static function trimQuery($sql){
+
         $sql = str_replace(PHP_EOL, '', $sql);
         $sql = preg_replace('#(\s+)#', ' ', $sql);
+
         return $sql;
     }
 
@@ -114,6 +116,7 @@ class Mysql
     public static function selectAll($sql = '', $bindParam = [], $bindParamInt = [])
     {
         $stmt = self::_select($sql, $bindParam, $bindParamInt);
+
         return $stmt->fetchAll();
     }
 
@@ -126,6 +129,7 @@ class Mysql
     public static function selectOne($sql = '', $bindParam = [], $bindParamInt = [])
     {
         $stmt = self::_select($sql, $bindParam, $bindParamInt);
+
         return $stmt->fetch();
     }
 

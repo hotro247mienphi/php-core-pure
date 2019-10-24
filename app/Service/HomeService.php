@@ -30,7 +30,6 @@ class HomeService
 
         $data = Mysql::selectAll($sql, $bindForSql, $bindIntForSql);
 
-
         // TODO: insert
         /*Mysql::insertBind('users', [
             'name'=> 'thuannd',
@@ -46,7 +45,7 @@ class HomeService
         ], ['id' => 208]);*/
 
         // TODO: delete
-        Mysql::delete('users', ['id' => 208]);
+        // Mysql::delete('users', ['id' => 208]);
 
         return [
             'data' => $data,
