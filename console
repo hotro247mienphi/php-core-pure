@@ -1,0 +1,21 @@
+#!/usr/bin/env php
+<?php
+{
+    if (file_exists($envPath = '.env')) {
+        foreach (explode(PHP_EOL, file_get_contents($envPath)) as $param):
+            if (preg_match('#(.*)=(.*)#', trim($param))) {
+                putenv($param);
+            }
+        endforeach;
+        unset($envPath);
+    }
+}
+
+include "vendor/autoload.php";
+
+use App\Console\DemoCommand;
+use Symfony\Component\Console\Application;
+
+$application = new Application();
+$application->add(new DemoCommand());
+$application->run();

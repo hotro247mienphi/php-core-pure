@@ -19,6 +19,7 @@
   "require": {
     "altorouter/altorouter": "^1.2",
     "ext-json": "*",
-    "ext-pdo": "*"
+    "ext-pdo": "*",
+    "symfony/console": "^4.3"
   }
 }
