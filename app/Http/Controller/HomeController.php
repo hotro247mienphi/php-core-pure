@@ -2,7 +2,10 @@
 
 namespace App\Http\Controller;
 
+use App\Console\DemoCommand;
+use App\Core\CommandInline;
 use App\Service\HomeService;
+
 
 /**
  * Class HomeController
@@ -13,6 +16,7 @@ class HomeController extends Controller
 
     /**
      * @return false|string
+     * @throws \Exception
      */
     public function index()
     {
@@ -32,6 +36,8 @@ class HomeController extends Controller
     public function info($id)
     {
         $this->setTitle('Info page');
+
+        CommandInline::run(DemoCommand::class);
 
         return $this->render('home.info', ['id' => $id]);
     }

@@ -1,5 +1,10 @@
 #!/usr/bin/env php
 <?php
+
+define('ROOT_PATH', __DIR__);
+define('LOG_PATH', ROOT_PATH . '/logs');
+define('COMMAND_PATH', ROOT_PATH . '/app/Console');
+
 {
     if (file_exists($envPath = '.env')) {
         foreach (explode(PHP_EOL, file_get_contents($envPath)) as $param):
@@ -13,9 +18,14 @@
 
 include "vendor/autoload.php";
 
-use App\Console\DemoCommand;
 use Symfony\Component\Console\Application;
 
 $application = new Application();
-$application->add(new DemoCommand());
+foreach (scandir(COMMAND_PATH) as $file):
+    if (is_file($file) && file_exists($file) && preg_match('#\.php$#', $file)) {
+        $className = 'App\Console\\' . preg_replace('#^(.*)(\.php)$#', '$1', $file);
+        $application->add(new $className);
+    }
+endforeach;
 $application->run();
+exit();

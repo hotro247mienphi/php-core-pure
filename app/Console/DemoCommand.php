@@ -23,13 +23,17 @@ class DemoCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+
         $name = $input->getArgument('name');
 
         $userService = new UserService();
         $data = var_export($userService->dataIndexAction(), true);
+        file_put_contents(LOG_PATH.'/app-demo.log', $data .PHP_EOL, FILE_APPEND);
 
-        $output->writeln(sprintf('Xin chao the gioi: %s', $name));
-        $output->writeln($data);
+        $output->write('success');
+
+//        $output->writeln(sprintf('Xin chao the gioi:\n %s', $name));
+//        $output->writeln($data);
     }
 
 }
