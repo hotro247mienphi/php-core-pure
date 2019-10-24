@@ -1,27 +1,51 @@
 <?php
 
-if (!function_exists('dump')) {
+if (!function_exists('shutdown')) {
     /**
-     * @param mixed ...$arguments
+     * function callback when shutdown
      */
-    function dump(...$arguments)
+    function shutdown()
     {
-        echo '<pre>';
-        foreach ($arguments as $argument):
-            var_dump($argument);
-        endforeach;
-        echo '</pre>';
+
+        # phần thời gian sẽ được tự động thêm vào phần đầu
+        $message = sprintf(
+                '[%s]: IP [%s] %s [%s] Duration: %s second(s) Mode [%s]',
+                date('Y-m-d H:i:s e'),
+                get_client_ip(),
+                get_request_method(),
+                get_full_url(),
+                number_format(microtime(true) - THREAD_START, 4),
+                env('APP_ENV', 'UNKNOW')
+            ) . PHP_EOL;
+
+        // $pathFile = LOG_PATH . '/log-' . date('Y-m-d') . '.log';
+
+        /*if (!file_exists($pathFile)) {
+            file_put_contents($pathFile, '', FILE_APPEND);
+        }*/
+
+        if (!empty($queryString = get_query_string())) {
+            $message .= var_export($queryString, true) . PHP_EOL;
+        }
+
+        # 3: ghi vao file
+        error_log($message, 3, LOG_FILE);
     }
 }
 
-if (!function_exists('dd')) {
+if (!function_exists('env')) {
+
     /**
-     * @param mixed ...$arguments
+     * @param string $key
+     * @param null $def
+     * @return string
      */
-    function dd(...$arguments)
+    function env($key = '', $def = null)
     {
-        dump(...$arguments);
-        die();
+        if ($value = getenv($key)) {
+            return $value;
+        }
+        return $def;
     }
 }
 
@@ -131,39 +155,6 @@ if (!function_exists('get_protocol')) {
     }
 }
 
-if (!function_exists('shutdown')) {
-    /**
-     * function callback when shutdown
-     */
-    function shutdown()
-    {
-
-        # phần thời gian sẽ được tự động thêm vào phần đầu
-        $message = sprintf(
-                '[%s]: IP [%s] %s [%s] Duration: %s second(s) Mode [%s]',
-                date('Y-m-d H:i:s e'),
-                get_client_ip(),
-                get_request_method(),
-                get_full_url(),
-                number_format(microtime(true) - THREAD_START, 4),
-                env('APP_ENV', 'UNKNOW')
-            ) . PHP_EOL;
-
-        // $pathFile = LOG_PATH . '/log-' . date('Y-m-d') . '.log';
-
-        /*if (!file_exists($pathFile)) {
-            file_put_contents($pathFile, '', FILE_APPEND);
-        }*/
-
-        if (!empty($queryString = get_query_string())) {
-            $message .= var_export($queryString, true) . PHP_EOL;
-        }
-
-        # 3: ghi vao file
-        error_log($message, 3, LOG_FILE);
-    }
-}
-
 if (!function_exists('public_html')) {
 
     /**
@@ -176,7 +167,6 @@ if (!function_exists('public_html')) {
     }
 }
 
-
 if (!function_exists('asset_path')) {
 
     /**
@@ -186,22 +176,5 @@ if (!function_exists('asset_path')) {
     function asset_path($path = '')
     {
         return get_domain_url() . '/assets/' . $path;
-    }
-}
-
-
-if (!function_exists('env')) {
-
-    /**
-     * @param string $key
-     * @param null $def
-     * @return string
-     */
-    function env($key = '', $def = null)
-    {
-        if ($value = getenv($key)) {
-            return $value;
-        }
-        return $def;
     }
 }

@@ -26,6 +26,8 @@ class HomeController extends Controller
 
         $shared = $homeService->dataIndexAction();
 
+        dump($shared);
+
         return $this->render('home.index', $shared);
     }
 
