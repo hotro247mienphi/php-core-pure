@@ -1,9 +1,7 @@
 <?php
 
-use App\Http\Controller\Controller;
-
 /**
- * @var Controller $this
+ * @var App\Core\Layout $this
  * @var string $id
  */
 ?>

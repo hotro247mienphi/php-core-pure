@@ -19,6 +19,10 @@ class Request
         $this->_request = new ParameterBag($_REQUEST);
     }
 
+    public function referer(){
+        return arr_get($_SERVER, 'HTTP_REFERER', '');
+    }
+
     public function method()
     {
         return strtoupper(arr_get($_SERVER, 'REQUEST_METHOD', 'GET'));
@@ -51,7 +55,6 @@ class Request
 
         return $default;
     }
-
 
     public function uri()
     {

@@ -1,9 +1,7 @@
 <?php
 
-use App\Core\Layout;
-
 /**
- * @var Layout $this
+ * @var App\Core\Layout $this
  */
 
 ?>

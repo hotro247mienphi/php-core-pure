@@ -39,7 +39,8 @@ class UserController extends Controller
      * @param $id
      * @return false|string
      */
-    public function edit($id){
+    public function edit($id)
+    {
         $this->setTitle('Edit User');
 
         $userService = new UserService();
@@ -52,7 +53,8 @@ class UserController extends Controller
     /**
      * @param $id
      */
-    public function update($id){
+    public function update($id)
+    {
 
         $userService = new UserService();
 

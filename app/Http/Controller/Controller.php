@@ -57,7 +57,7 @@ class Controller
      */
     protected function back()
     {
-        $this->redirect($_SERVER['HTTP_REFERER']);
+        $this->redirect(arr_get($_SERVER, 'HTTP_REFERER'));
     }
 
     /**
