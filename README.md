@@ -1,4 +1,6 @@
 # PHP core pure
+- Đây là bộ core đơn giản được xây dựng bằng mã nguồn PHP thuần túy.
+- Mục đích dùng cho các dự án nhỏ mà có yêu cầu không sử dụng framework nào.
 
 ## packages
 - altorouter/altorouter
