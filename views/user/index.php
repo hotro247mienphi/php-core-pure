@@ -22,6 +22,8 @@ $this->addScriptFooter(asset_path('js/footer.js'));
                     </a>
                     <span class="badge badge-dark ml-3"><?php echo $item->id; ?></span>
 
+                    <hr/>
+                    
                     <div class="btn-group">
                         <a href="<?php echo route('users.show', ['id'=>$item->id]); ?>" class="btn btn-info btn-sm">View</a>
                         <a href="<?php echo route('users.edit', ['id'=>$item->id]); ?>" class="btn btn-primary btn-sm">Edit</a>

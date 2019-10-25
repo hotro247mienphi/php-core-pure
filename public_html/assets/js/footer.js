@@ -1,9 +1,26 @@
-console.log('footer.js is loaded');
+var JsPure = (function (doc) {
 
-var JsPure = {
-    confirmAndDelete: function (formId) {
-        if (confirm('Xóa bản ghi này?')) {
-            document.getElementById(formId).submit();
+    var log = console.log;
+
+    function getById(id) {
+        return doc.getElementById(id);
+    }
+
+    function initital() {
+        log('JsPure initial');
+    }
+
+    initital();
+
+    /**
+     * public methods
+     */
+    return {
+        confirmAndDelete: function (formId) {
+            if (confirm('Xóa bản ghi này?')) {
+                getById(formId).submit();
+            }
         }
     }
-};
+
+})(document);
