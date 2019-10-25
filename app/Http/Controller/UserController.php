@@ -13,10 +13,26 @@ class UserController extends Controller
 {
     protected $service;
 
+    /**
+     * UserController constructor.
+     * @param Layout $layout
+     */
     public function __construct(Layout $layout)
     {
         parent::__construct($layout);
         $this->service = new UserService();
+    }
+
+    /**
+     * @return false|string
+     */
+    public function index()
+    {
+        $this->setTitle('List Users');
+
+        $shared = $this->service->indexAction();
+
+        return $this->render('user.index', $shared);
     }
 
     /**
@@ -71,11 +87,12 @@ class UserController extends Controller
 
     /**
      * @param $id
+     * @throws \Exception
      */
     public function delete($id)
     {
-        $this->service->updateAction($id);
-        $this->back();
+        $this->service->deleteAction($id);
+        $this->redirect(route('users.index'));
     }
 
 }

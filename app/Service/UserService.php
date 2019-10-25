@@ -4,25 +4,46 @@
 namespace App\Service;
 
 use App\Core\Mysql;
+use App\Core\QueryBuilder;
 use App\Core\Request;
 
 class UserService
 {
-    public function dataIndexAction()
+    /**
+     * @return array
+     */
+    public function indexAction()
     {
-        $sql = "SELECT `id`, `name`, `email`, `status`, `created_at` FROM `users`";
+        $builder = new QueryBuilder();
 
-        $data = Mysql::selectAll($sql);
+        $builder->from('users')
+            ->select(['id', 'name', 'email', 'status', 'created_at'])
+            ->where('id', '>', 10)
+            ->andWhere('id', '<', 100)
+            ->andWhere('status', 1)
+            ->order('created_at', 'desc')
+            ->limit(200);
 
-        return ['data' => $data];
+        $data = Mysql::selectAll($builder->generate(), ...$builder->getBindParams());
+
+        return [
+            'data' => $data,
+        ];
     }
 
+    /**
+     * createAction
+     */
     public function createAction()
     {
         $data = Request::all();
         Mysql::insert('users', $data);
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function showAction($id)
     {
         $user = Mysql::findById('users', $id);
@@ -30,33 +51,35 @@ class UserService
         return ['user' => $user];
     }
 
+    /**
+     * @param $id
+     * @return array
+     */
     public function editAction($id)
     {
-
         $user = Mysql::findById('users', $id);
 
         return ['user' => $user];
     }
 
+    /**
+     * @param $id
+     */
     public function updateAction($id)
     {
-
         $user = Mysql::findById('users', $id);
         $data = Request::all();
 
         if ($user && $data) {
-
             Mysql::update('users', $data, ['id' => $id]);
         }
     }
 
+    /**
+     * @param $id
+     */
     public function deleteAction($id)
     {
-
-        $user = Mysql::findById('users', $id);
-
-        if ($user) {
-            Mysql::delete('users', ['id' => $id]);
-        }
+        Mysql::delete('users', ['id' => $id]);
     }
 }
