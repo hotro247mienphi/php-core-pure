@@ -3,7 +3,7 @@
 namespace App\Http\Controller;
 
 use App\Console\DemoCommand;
-use App\Core\CommandInline;
+use App\Core\Console;
 
 /**
  * Class HomeController
@@ -21,7 +21,9 @@ class HomeController extends Controller
 
         $this->setLayout('custom-layout');
 
-        // CommandInline::run(DemoCommand::class);
+         Console::run(DemoCommand::class, [
+             'name'=> 'thuannd'
+         ]);
 
         return $this->render('home.index');
     }

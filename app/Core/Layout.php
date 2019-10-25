@@ -81,13 +81,9 @@ class Layout
         }
 
         ob_start();
-
         extract($data);
-
         include_once "$path";
-
         $content = ob_get_contents();
-
         ob_end_clean();
 
         return $content;
@@ -157,14 +153,28 @@ class Layout
      */
     public function generalStyle()
     {
+        $link = '';
         if ($items = $this->getStyle()) {
-            $link = '';
             foreach ($items as $item):
                 $link .= '<link rel="stylesheet" href="' . $item . '"/>' . PHP_EOL;
             endforeach;
-            return $link;
         }
-        return '';
+        return $link;
+    }
+
+    /**
+     * @param array $paths
+     * @return string
+     */
+    protected function generateScript(array $paths = [])
+    {
+        $scripts = '';
+        if ($paths) {
+            foreach ($paths as $path):
+                $scripts .= '<script src="' . $path . '"></script>' . PHP_EOL;
+            endforeach;
+        }
+        return $scripts;
     }
 
     /**
@@ -172,15 +182,7 @@ class Layout
      */
     public function generateScriptHeader()
     {
-        if ($items = $this->getScriptHeader()) {
-            $scripts = '';
-            foreach ($items as $item):
-                $scripts .= '<script src="' . $item . '"></script>' . PHP_EOL;
-            endforeach;
-            return $scripts;
-        }
-
-        return '';
+        return $this->generateScript($this->getScriptHeader());
     }
 
     /**
@@ -188,14 +190,7 @@ class Layout
      */
     public function generateScriptFooter()
     {
-        if ($items = $this->getScriptFooter()) {
-            $scripts = '';
-            foreach ($items as $item):
-                $scripts .= '<script src="' . $item . '"></script>' . PHP_EOL;
-            endforeach;
-            return $scripts;
-        }
-        return '';
+        return $this->generateScript($this->getScriptFooter());
     }
 
     /**
@@ -203,7 +198,8 @@ class Layout
      */
     public function inc($path)
     {
-        if (file_exists($fullPath = VIEWS_PATH . '/' . $path . '.php')) {
+        $fullPath = sprintf('%s/%s.php', VIEWS_PATH, $path);
+        if (file_exists($fullPath)) {
             include "$fullPath";
         }
     }

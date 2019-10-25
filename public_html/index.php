@@ -2,6 +2,7 @@
 
 include __DIR__ . "/../vendor/autoload.php";
 
+# define variables
 define('ROOT_PATH', __DIR__ . './..');
 define('LOG_PATH', ROOT_PATH . '/logs');
 define('VIEWS_PATH', ROOT_PATH . '/views');
@@ -12,6 +13,9 @@ define('THREAD_RAM', memory_get_usage(true));
 
 define('ERROR_FILE', LOG_PATH . '/error-' . date('Y-m-d') . '.log');
 define('LOG_FILE', LOG_PATH . '/log-' . date('Y-m-d') . '.log');
+
+# register shutdown function
+register_shutdown_function('shutdown');
 
 # load env params
 $dotenv = new Symfony\Component\Dotenv\Dotenv();
@@ -25,6 +29,3 @@ ini_set("error_log", ERROR_FILE);
 # new application and run
 $app = new App\Core\Application();
 $app->run();
-
-# register shutdown function
-register_shutdown_function('shutdown');

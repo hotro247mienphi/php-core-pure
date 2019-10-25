@@ -26,8 +26,6 @@ if (!function_exists('shutdown')) {
      */
     function shutdown()
     {
-
-        # phần thời gian sẽ được tự động thêm vào phần đầu
         $message = sprintf(
                 '[%s]: IP [%s] %s [%s] Duration: %s second(s) Mode [%s]',
                 date('Y-m-d H:i:s e'),

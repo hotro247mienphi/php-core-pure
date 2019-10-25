@@ -19,4 +19,6 @@ foreach (scandir(COMMAND_PATH) as $file):
     }
 endforeach;
 
-$application->run();
+$status = $application->run();
+
+exit($status);

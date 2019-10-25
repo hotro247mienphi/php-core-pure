@@ -6,9 +6,10 @@ use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Output\BufferedOutput;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
 
-class CommandInline
+class Console
 {
-    public static function run($namespaceCommand = ''){
+    public static function run($namespaceCommand = '', $params = [])
+    {
 
         /** @var SymfonyCommand $command */
         $command = new $namespaceCommand;
@@ -18,9 +19,9 @@ class CommandInline
 
         $app->setAutoExit(false);
 
-        $input = new ArrayInput([
-            'command'=> $command->getName()
-        ]);
+        $input = new ArrayInput(array_merge([
+            'command' => $command->getName(),
+        ], $params));
 
         $output = new BufferedOutput();
 
