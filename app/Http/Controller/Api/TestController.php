@@ -10,7 +10,7 @@ class TestController extends Controller
     public function index()
     {
         $userService = new UserService();
-        $shared = $userService->dataIndexAction();
+        $shared = $userService->indexAction();
 
         return $this->json($shared);
     }

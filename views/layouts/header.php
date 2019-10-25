@@ -6,13 +6,13 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <li class="nav-item active">
+            <li class="nav-item <?php echo is_url(route('users.index')) ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo route('users.index'); ?>">Users <span class="sr-only">(current)</span></a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo is_url(route('users.create')) ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo route('users.create'); ?>">Create User</a>
             </li>
-            <li class="nav-item">
+            <li class="nav-item <?php echo is_url(route('api.json')) ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo route('api.json'); ?>">Api json</a>
             </li>
         </ul>

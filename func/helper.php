@@ -36,10 +36,6 @@ if (!function_exists('shutdown')) {
                 env('APP_ENV', 'UNKNOW')
             ) . PHP_EOL;
 
-        if (!empty($queryString = get_query_string())) {
-            $message .= var_export($queryString, true) . PHP_EOL;
-        }
-
         # 3: ghi vao file
         error_log($message, 3, LOG_FILE);
     }
@@ -110,6 +106,18 @@ if (!function_exists('get_uri')) {
     function get_uri()
     {
         return Request::uri();
+    }
+}
+
+if (!function_exists('get_uri_without_query')) {
+    /**
+     * @return string
+     */
+    function get_uri_without_query()
+    {
+        $uri = Request::uri();
+        $arr = explode('?', $uri);
+        return $arr[0];
     }
 }
 
@@ -209,5 +217,17 @@ if (!function_exists('write_log')) {
     function write_log($file = '', $content = '')
     {
         error_log($content, 3, $file);
+    }
+}
+
+if (!function_exists('is_url')) {
+
+    /**
+     * @param string $path
+     * @return bool
+     */
+    function is_url($path = '')
+    {
+        return $path === get_uri_without_query();
     }
 }
