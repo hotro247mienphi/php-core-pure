@@ -11,15 +11,27 @@ class Route
     /** @var array $_routerMatch */
     protected static $_routerMatch;
 
+    public static function getInstance(){
+
+        if(self::$altRoute instanceof \AltoRouter){
+            return self::$altRoute;
+        }
+
+        self::$altRoute = new \AltoRouter();
+
+        return self::$altRoute;
+    }
+
     /**
      * @param array $routes
      * @throws \Exception
      */
     public static function load(array $routes)
     {
-        self::$altRoute = new \AltoRouter();
+        $instance = self::getInstance();
+
         foreach ($routes as $router):
-            self::$altRoute->map(
+            $instance->map(
                 $router['method'],
                 $router['path'],
                 $router['controller'] . '#' . $router['action'],
@@ -27,7 +39,7 @@ class Route
             );
         endforeach;
 
-        self::$_routerMatch = self::$altRoute->match();
+        self::$_routerMatch = $instance->match();
     }
 
     /**

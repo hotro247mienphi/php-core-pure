@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Core\Mysql;
+use App\Core\QueryBuilder;
 
 /**
  * Class HomeService
@@ -15,37 +16,19 @@ class HomeService
      */
     public function indexAction()
     {
-        $sql = "SELECT `id`, `name`, `email`, `status`, `created_at` FROM `users` WHERE `id` > :id AND `status` = :status ORDER BY :sort_by DESC LIMIT :limit OFFSET :offset";
+        $builder = new QueryBuilder();
 
-        $bindForSql = [
-            'id' => 10,
-            'status' => 1,
-            'sort_by' => 'created_at',
-        ];
+        $builder->from('users')
+            ->select(['id', 'name', 'email', 'status', 'created_at'])
+            ->where('id', '>', 10)
+            ->andWhere('id', '<', 100)
+            ->andWhere('status', 1)
+            ->order('created_at', 'desc')
+            ->limit(200);
 
-        $bindIntForSql = [
-            'offset' => 0,
-            'limit' => 500
-        ];
+        $data = Mysql::selectAll($builder->generate(), ...$builder->getBindParams());
 
-        $data = Mysql::selectAll($sql, $bindForSql, $bindIntForSql);
-
-        // TODO: insert
-        /*Mysql::insertBind('users', [
-            'name'=> 'thuannd',
-            'email'=> 'thuannd@gmail.com',
-            'password'=> 'secrect',
-            'status'=> 1,
-        ]);*/
-
-        // TODO: update
-        /*Mysql::update('users', [
-            'name' => 'thuannd - pure',
-            'password' => md5('secrect'),
-        ], ['id' => 208]);*/
-
-        // TODO: delete
-        // Mysql::delete('users', ['id' => 208]);
+        $builder->flush();
 
         return [
             'data' => $data,

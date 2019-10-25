@@ -12,14 +12,15 @@ namespace App\Core;
 class Mysql
 {
 
+    /** @var \PDO $instance */
     public static $instance;
 
     /**
-     * @return mixed
+     * @return \PDO
      */
-    public static function getConnect()
+    public static function getInstance()
     {
-        if (self::$instance) {
+        if (self::$instance instanceof \PDO) {
             return self::$instance;
         }
 
@@ -62,22 +63,12 @@ class Mysql
     /**
      * @param $sql
      * @param array $bindParam
-     * @return \PDO
+     * @return mixed
      */
     public static function exec($sql, $bindParam = [])
     {
         $sql = self::trimQuery($sql);
-        try{
-            /** @var \PDO $conn */
-            $conn = self::getConnect();
-            $stmt = $conn->prepare($sql);
-            $stmt->execute($bindParam);
-        } catch (\Exception $exception){
-
-        }
-
-        /** @var \PDO $conn */
-        $conn = self::getConnect();
+        $conn = self::getInstance();
         $stmt = $conn->prepare($sql);
         $stmt->execute($bindParam);
 
@@ -94,9 +85,7 @@ class Mysql
     public static function _select($sql = '', $bindParam = [], $bindParamInt = [])
     {
         $sql = self::trimQuery($sql);
-
-        /** @var \PDO $conn */
-        $conn = self::getConnect();
+        $conn = self::getInstance();
         $stmt = $conn->prepare($sql);
 
         if ($bindParam) {
@@ -151,10 +140,38 @@ class Mysql
      */
     public static function findById($table = '', $id = null)
     {
-        $sql = "SELECT * FROM {$table} WHERE id = :id";
+        $sql = sprintf('SELECT * FROM `%s` WHERE `id`=:id', $table);
         $sql = self::trimQuery($sql);
         $stmt = self::_select($sql, ['id' => $id]);
         return $stmt->fetch();
+    }
+
+    /**
+     * @param string $table
+     * @param array $columns
+     * @param array $where
+     * @return mixed
+     */
+    public static function find($table = '', $columns = [], $where = [])
+    {
+
+        $fields = $fieldsWhere = $bindParams = [];
+
+        foreach ($columns as $key => $val):
+            $fields[] = "`{$key}`";
+            $bindParams[":{$key}"] = $val;
+        endforeach;
+
+        foreach ($where as $item):
+            $fieldsWhere[] = "`{$item[0]}` {$item[1]} :{$item[0]}";
+            $bindParams[":{$item[0]}"] = $item[2];
+        endforeach;
+
+        $sql = sprintf('SELECT %s FROM `%s` WHERE %s', $table, join(',', $fields), join(',', $fieldsWhere));
+        $sql = self::trimQuery($sql);
+        $stmt = self::_select($sql, $bindParams);
+
+        return $stmt->fetchAll();
     }
 
     /**
@@ -172,7 +189,7 @@ class Mysql
             $bindParams[":{$key}"] = $val;
         endforeach;
 
-        $sql = "INSERT INTO {$table}(" . join(',', $fields) . ") VALUES (" . join(',', $values) . ")";
+        $sql = sprintf('INSERT INTO `%s`(%s) VALUES(%s)', $table, join(',', $fields), join(',', $values));
 
         return self::exec($sql, $bindParams);
     }
@@ -197,7 +214,7 @@ class Mysql
             $bindParams[":{$key}"] = $val;
         endforeach;
 
-        $sql = "UPDATE {$table} SET " . join(',', $fieldsSet) . " WHERE " . join(',', $fieldsWhere);
+        $sql = sprintf('UPDATE `%s` SET %s WHERE %s', $table, join(',', $fieldsSet), join(',', $fieldsWhere));
 
         return self::exec($sql, $bindParams);
     }
@@ -216,7 +233,7 @@ class Mysql
             $bindParams[":{$key}"] = $val;
         endforeach;
 
-        $sql = "DELETE FROM {$table} WHERE " . join(',', $fieldsWhere);
+        $sql = sprintf('DELETE FROM %s WHERE %s', $table, join(',', $fieldsWhere));
 
         return self::exec($sql, $bindParams);
     }

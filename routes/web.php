@@ -16,9 +16,9 @@ return [
 
     ['method' => 'GET', 'path' => '/users/[i:id]/edit', 'controller' => 'UserController', 'action' => 'edit', 'name' => 'users.edit'],
 
-    ['method' => 'POST', 'path' => '/users/[i:id]/update', 'controller' => 'UserController', 'action' => 'update', 'name' => 'users.update'],
+    ['method' => 'PUT|PATCH', 'path' => '/users/[i:id]', 'controller' => 'UserController', 'action' => 'update', 'name' => 'users.update'],
 
-    ['method' => 'POST', 'path' => '/users/[i:id]/delete', 'controller' => 'UserController', 'action' => 'delete', 'name' => 'users.delete'],
+    ['method' => 'DELETE', 'path' => '/users/[i:id]', 'controller' => 'UserController', 'action' => 'delete', 'name' => 'users.delete'],
 
     // TODO: // ---------------------- OTHER GROUP  ---------------------- //
 

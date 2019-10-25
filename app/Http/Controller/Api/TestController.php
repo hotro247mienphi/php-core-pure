@@ -3,9 +3,9 @@
 namespace App\Http\Controller\Api;
 
 use App\Http\Controller\Controller;
-use App\Service\Api\UserService;
+use App\Service\UserService;
 
-class UserController extends Controller
+class TestController extends Controller
 {
     public function index()
     {

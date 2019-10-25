@@ -15,8 +15,21 @@ class Application
         $this->initial();
     }
 
+    protected function overrideMethod()
+    {
+        $method = strtoupper(arr_get($_POST, '_method', 'GET'));
+
+        if (in_array($method, ['HEAD', 'PUT', 'DELETE', 'CONNECT', 'OPTIONS', 'PATCH', 'PURGE', 'TRACE'])) {
+            $_SERVER['REQUEST_METHOD'] = $method;
+            $_SERVER['X-HTTP-METHOD-OVERRIDE'] = true;
+            unset($_POST['_method']);
+        }
+
+    }
+
     protected function initial()
     {
+        $this->overrideMethod();
 
         Request::load();
 
@@ -32,7 +45,6 @@ class Application
 
     public function run()
     {
-
         $actionParams = [];
         $controllerName = Config::get('errorController');
         $action = Config::get('errorAction');
@@ -45,13 +57,13 @@ class Application
         $controller = sprintf('%s\%s', Config::get('namespaceController'), $controllerName);
 
         if (!class_exists($controller)) {
-            throw new \Error('Controller not found');
+            throw new \Error(sprintf('Controller [%s] not found', $controllerName));
         }
 
         $controller = new $controller(new Layout());
 
         if (!method_exists($controller, $action)) {
-            throw new \Error('Method not found');
+            throw new \Error(sprintf('Method [%s] not found in controller [%s].', $action, $controllerName));
         }
 
         echo call_user_func_array([$controller, $action], $actionParams);
