@@ -13,7 +13,7 @@ class HomeService
     /**
      * @return array
      */
-    public function dataIndexAction()
+    public function indexAction()
     {
         $sql = "SELECT `id`, `name`, `email`, `status`, `created_at` FROM `users` WHERE `id` > :id AND `status` = :status ORDER BY :sort_by DESC LIMIT :limit OFFSET :offset";
 
@@ -24,8 +24,8 @@ class HomeService
         ];
 
         $bindIntForSql = [
-            'offset' => 10,
-            'limit' => 24
+            'offset' => 0,
+            'limit' => 500
         ];
 
         $data = Mysql::selectAll($sql, $bindForSql, $bindIntForSql);

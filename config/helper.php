@@ -1,6 +1,7 @@
 <?php
 
 use App\Core\Route;
+use App\Core\Request;
 
 if (!function_exists('arr_get')) {
     /**
@@ -36,12 +37,6 @@ if (!function_exists('shutdown')) {
                 number_format(microtime(true) - THREAD_START, 4),
                 env('APP_ENV', 'UNKNOW')
             ) . PHP_EOL;
-
-        // $pathFile = LOG_PATH . '/log-' . date('Y-m-d') . '.log';
-
-        /*if (!file_exists($pathFile)) {
-            file_put_contents($pathFile, '', FILE_APPEND);
-        }*/
 
         if (!empty($queryString = get_query_string())) {
             $message .= var_export($queryString, true) . PHP_EOL;
@@ -85,9 +80,7 @@ if (!function_exists('get_query_string')) {
      */
     function get_query_string()
     {
-        $queryString = $_SERVER['QUERY_STRING'];
-        parse_str($queryString, $params);
-        return $params;
+        return Request::queryString();
     }
 }
 
@@ -97,7 +90,7 @@ if (!function_exists('get_request_method')) {
      */
     function get_request_method()
     {
-        return strtoupper($_SERVER['REQUEST_METHOD']);
+        return Request::method();
     }
 }
 
@@ -108,16 +101,7 @@ if (!function_exists('get_client_ip')) {
      */
     function get_client_ip($defVal = '')
     {
-        $keys = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
-
-        foreach ($keys as $key):
-            if ($result = getenv($key)) {
-                return $result;
-                break;
-            }
-        endforeach;
-
-        return $defVal;
+        return Request::ip($defVal);
     }
 }
 
@@ -127,7 +111,7 @@ if (!function_exists('get_uri')) {
      */
     function get_uri()
     {
-        return $_SERVER['REQUEST_URI'];
+        return Request::uri();
     }
 }
 
@@ -137,10 +121,7 @@ if (!function_exists('get_full_url')) {
      */
     function get_full_url()
     {
-        if (get_uri() !== '/') {
-            return get_domain_url() . get_uri();
-        }
-        return get_domain_url();
+        return Request::fullUrl();
     }
 }
 
@@ -150,7 +131,7 @@ if (!function_exists('get_hostname')) {
      */
     function get_hostname()
     {
-        return $_SERVER['HTTP_HOST'];
+        return Request::hostname();
     }
 }
 
@@ -160,7 +141,17 @@ if (!function_exists('get_domain_url')) {
      */
     function get_domain_url()
     {
-        return get_protocol() . "://" . get_hostname();
+        return Request::domain();
+    }
+}
+
+if (!function_exists('is_secure')) {
+    /**
+     * @return bool
+     */
+    function is_secure()
+    {
+        return Request::isSecure();
     }
 }
 
@@ -170,7 +161,7 @@ if (!function_exists('get_protocol')) {
      */
     function get_protocol()
     {
-        return (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http");
+        return Request::protocol();
     }
 }
 
@@ -204,6 +195,7 @@ if (!function_exists('route')) {
      * @param string $name
      * @param array $params
      * @return string
+     * @throws Exception
      */
     function route($name = '', $params = [])
     {

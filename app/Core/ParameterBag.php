@@ -16,7 +16,11 @@ class ParameterBag
      */
     public function __construct(array $parameters = [])
     {
-        $this->parameters = $parameters;
+        if(is_array($parameters)){
+            $this->parameters = $parameters;
+        } else {
+            $this->parameters = [];
+        }
     }
 
     /**

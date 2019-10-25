@@ -2,7 +2,8 @@
 
 namespace App\Http\Controller;
 
-use App\Service\Api\UserService;
+use App\Core\Layout;
+use App\Service\UserService;
 
 /**
  * Class HomeController
@@ -10,6 +11,13 @@ use App\Service\Api\UserService;
  */
 class UserController extends Controller
 {
+    protected $service;
+
+    public function __construct(Layout $layout)
+    {
+        parent::__construct($layout);
+        $this->service = new UserService();
+    }
 
     /**
      * @return false|string
@@ -17,8 +25,18 @@ class UserController extends Controller
     public function create()
     {
         $this->setTitle('Create User');
-
         return $this->render('user.create');
+    }
+
+    /**
+     * @param $id
+     * @return false|string
+     */
+    public function show($id)
+    {
+        $this->setTitle('Show User');
+        $data = $this->service->showAction($id);
+        return $this->json($data);
     }
 
     /**
@@ -27,11 +45,7 @@ class UserController extends Controller
     public function store()
     {
         $this->setTitle('Info page');
-
-        $userService = new UserService();
-
-        $userService->createAction();
-
+        $this->service->createAction();
         $this->back();
     }
 
@@ -42,11 +56,7 @@ class UserController extends Controller
     public function edit($id)
     {
         $this->setTitle('Edit User');
-
-        $userService = new UserService();
-
-        $shared = $userService->editAction($id);
-
+        $shared = $this->service->editAction($id);
         return $this->render('user.edit', $shared);
     }
 
@@ -55,11 +65,16 @@ class UserController extends Controller
      */
     public function update($id)
     {
+        $this->service->updateAction($id);
+        $this->back();
+    }
 
-        $userService = new UserService();
-
-        $userService->updateAction($id);
-
+    /**
+     * @param $id
+     */
+    public function delete($id)
+    {
+        $this->service->updateAction($id);
         $this->back();
     }
 

@@ -12,10 +12,10 @@ class Route
     protected static $_routerMatch;
 
     /**
-     * @param $routes
+     * @param array $routes
      * @throws \Exception
      */
-    public static function load($routes)
+    public static function load(array $routes)
     {
         self::$altRoute = new \AltoRouter();
         foreach ($routes as $router):

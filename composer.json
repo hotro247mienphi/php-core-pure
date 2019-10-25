@@ -12,7 +12,7 @@
     },
     "classmap": [],
     "files": [
-      "config/common.php"
+      "config/helper.php"
     ]
   },
   "config": {

@@ -18,7 +18,7 @@ $dotenv = new Symfony\Component\Dotenv\Dotenv();
 $dotenv->load(ROOT_PATH . '/.env');
 
 # switch mode display errors by enviroment
-ini_set('display_errors', getenv('APP_ENV') === 'PROD');
+ini_set('display_errors', getenv('APP_ENV') !== 'PROD');
 ini_set("log_errors", true);
 ini_set("error_log", ERROR_FILE);
 

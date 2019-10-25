@@ -31,11 +31,17 @@ class Mysql
     public static function connect()
     {
         $db = Config::get('db');
+
         try {
+
             self::$instance = new \PDO("mysql:host={$db['host']};dbname={$db['name']};charset={$db['charset']}", $db['user'], $db['pass']);
+
             self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
+
         } catch (\PDOException $e) {
+
             error_log($e->getMessage(), 3, ERROR_FILE);
+
         }
     }
 
@@ -47,6 +53,7 @@ class Mysql
     {
 
         $sql = str_replace(PHP_EOL, '', $sql);
+
         $sql = preg_replace('#(\s+)#', ' ', $sql);
 
         return $sql;
@@ -60,6 +67,14 @@ class Mysql
     public static function exec($sql, $bindParam = [])
     {
         $sql = self::trimQuery($sql);
+        try{
+            /** @var \PDO $conn */
+            $conn = self::getConnect();
+            $stmt = $conn->prepare($sql);
+            $stmt->execute($bindParam);
+        } catch (\Exception $exception){
+
+        }
 
         /** @var \PDO $conn */
         $conn = self::getConnect();

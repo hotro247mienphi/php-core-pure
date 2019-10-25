@@ -18,6 +18,8 @@ class Application
     protected function initial()
     {
 
+        Request::load();
+
         Config::load(require ROOT_PATH . '/config/config.php');
 
         Route::load(array_merge(

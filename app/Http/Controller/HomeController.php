@@ -22,7 +22,7 @@ class HomeController extends Controller
 
         $homeService = new HomeService();
 
-        $shared = $homeService->dataIndexAction();
+        $shared = $homeService->indexAction();
 
         // CommandInline::run(DemoCommand::class);
 
