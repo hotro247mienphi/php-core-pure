@@ -67,11 +67,15 @@ class Route
      * @param string $name
      * @param array $param
      * @return string
-     * @throws \Exception
      */
     public static function generate($name = '', $param = [])
     {
-        return self::$altRoute->generate($name, $param);
+        try {
+            return self::$altRoute->generate($name, $param);
+        } catch (\Exception $exception) {
+            return '#';
+        }
+
     }
 
     /**

@@ -195,7 +195,6 @@ if (!function_exists('route')) {
      * @param string $name
      * @param array $params
      * @return string
-     * @throws Exception
      */
     function route($name = '', $params = [])
     {
