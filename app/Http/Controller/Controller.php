@@ -31,6 +31,14 @@ class Controller
     }
 
     /**
+     * @param string $layoutName
+     */
+    public function setLayout($layoutName = '')
+    {
+        $this->layout->layout = $layoutName;
+    }
+
+    /**
      * @param string $name
      * @param array $data
      * @return false|string

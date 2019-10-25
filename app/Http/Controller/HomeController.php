@@ -19,6 +19,8 @@ class HomeController extends Controller
     {
         $this->setTitle('Home index');
 
+        $this->setLayout('custom-layout');
+
         // CommandInline::run(DemoCommand::class);
 
         return $this->render('home.index');
