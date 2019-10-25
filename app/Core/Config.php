@@ -12,10 +12,14 @@ class Config
     protected static $configs = [];
 
     /**
-     * @param array $data
+     * @param array $files
      */
-    public static function load($data = [])
+    public static function load($files = [])
     {
+        $data = [];
+        foreach ($files as $file):
+            $data = array_merge($data, require "$file");
+        endforeach;
         self::$configs = $data;
     }
 

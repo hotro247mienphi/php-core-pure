@@ -10,11 +10,18 @@ namespace App\Core;
 class Application
 {
 
+    /**
+     * Application constructor.
+     * @throws \Exception
+     */
     public function __construct()
     {
         $this->initial();
     }
 
+    /**
+     * override method request
+     */
     protected function overrideMethod()
     {
         $method = strtoupper(arr_get($_POST, '_method', 'GET'));
@@ -24,25 +31,34 @@ class Application
             $_SERVER['X-HTTP-METHOD-OVERRIDE'] = true;
             unset($_POST['_method']);
         }
-
     }
 
+    /**
+     * initial all seting application
+     *
+     * @throws \Exception
+     */
     protected function initial()
     {
         $this->overrideMethod();
 
         Request::load();
 
-        Config::load(require ROOT_PATH . '/config/config.php');
+        Config::load([
+            ROOT_PATH . '/config/config.php'
+        ]);
 
-        Route::load(array_merge(
-            require ROOT_PATH . '/routes/web.php',
-            require ROOT_PATH . '/routes/api.php'
-        ));
+        Route::load([
+            ROOT_PATH . '/routes/web.php',
+            ROOT_PATH . '/routes/api.php'
+        ]);
 
         date_default_timezone_set(Config::get('timezone', 'Asia/Ho_Chi_Minh'));
     }
 
+    /**
+     * Start application
+     */
     public function run()
     {
         $actionParams = [];

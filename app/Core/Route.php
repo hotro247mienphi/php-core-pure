@@ -2,6 +2,10 @@
 
 namespace App\Core;
 
+/**
+ * Class Route
+ * @package App\Core
+ */
 class Route
 {
 
@@ -11,9 +15,12 @@ class Route
     /** @var array $_routerMatch */
     protected static $_routerMatch;
 
-    public static function getInstance(){
-
-        if(self::$altRoute instanceof \AltoRouter){
+    /**
+     * @return \AltoRouter
+     */
+    public static function getInstance()
+    {
+        if (self::$altRoute instanceof \AltoRouter) {
             return self::$altRoute;
         }
 
@@ -28,18 +35,32 @@ class Route
      */
     public static function load(array $routes)
     {
-        $instance = self::getInstance();
-
         foreach ($routes as $router):
-            $instance->map(
-                $router['method'],
-                $router['path'],
-                $router['controller'] . '#' . $router['action'],
-                $router['name']
-            );
+            include "$router";
         endforeach;
 
+        $instance = self::getInstance();
+
         self::$_routerMatch = $instance->match();
+    }
+
+    /**
+     * @param $method
+     * @param $path
+     * @param $controller
+     * @param $action
+     * @param $name
+     */
+    public static function add($method, $path, $controller, $action, $name)
+    {
+        try {
+            $instance = self::getInstance();
+
+            $instance->map($method, $path, $controller . '#' . $action, $name);
+
+        } catch (\Exception $exception) {
+            error_log(sprintf('Router [%s %s %s#%s] map failure', $method, $path, $controller, $action), 3, ERROR_FILE);
+        }
     }
 
     /**

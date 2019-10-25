@@ -1,4 +1,5 @@
 <?php
-return [
-    ['method' => 'GET', 'path' => '/api/json', 'controller' => 'Api\TestController', 'action' => 'index', 'name' => 'api.json'],
-];
+
+use App\Core\Route;
+
+Route::add('GET', '/api/json', 'Api\TestController', 'index', 'api.json');
