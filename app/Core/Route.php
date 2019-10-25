@@ -53,13 +53,12 @@ class Route
      */
     public static function add($method, $path, $controller, $action, $name)
     {
+        $instance = self::getInstance();
         try {
-            $instance = self::getInstance();
-
             $instance->map($method, $path, $controller . '#' . $action, $name);
-
         } catch (\Exception $exception) {
-            error_log(sprintf('Router [%s %s %s#%s] map failure', $method, $path, $controller, $action), 3, ERROR_FILE);
+            $contentLog = sprintf('Router [%s %s %s#%s] map failure', $method, $path, $controller, $action);
+            write_log($contentLog, ERROR_FILE);
         }
     }
 
@@ -73,9 +72,9 @@ class Route
         try {
             return self::$altRoute->generate($name, $param);
         } catch (\Exception $exception) {
-            return '#';
+            $contentLog = sprintf('Router [%s] not found', $name);
+            write_log($contentLog, ERROR_FILE);
         }
-
     }
 
     /**

@@ -199,3 +199,15 @@ if (!function_exists('route')) {
         return Route::generate($name, $params);
     }
 }
+
+if (!function_exists('write_log')) {
+
+    /**
+     * @param string $file
+     * @param string $content
+     */
+    function write_log($file = '', $content = '')
+    {
+        error_log($content, 3, $file);
+    }
+}
