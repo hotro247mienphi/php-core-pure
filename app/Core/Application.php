@@ -36,13 +36,11 @@ class Application
 
         if ($method !== 'GET') {
             $csrf = arr_get($_POST, '_csrf');
-
-            if ($csrf === Csrf::get()) {
+            if (Csrf::verify($csrf)) {
                 unset($_POST['_csrf']);
             } else {
                 throw new \Error('token CSRF invalid.');
             }
-
         }
     }
 
@@ -54,13 +52,11 @@ class Application
     protected function initial()
     {
         $this->overrideMethod();
-
+        Csrf::generate();
         Request::load();
-
         Config::load([
             ROOT_PATH . '/config/config.php'
         ]);
-
         Route::load([
             ROOT_PATH . '/routes/web.php',
             ROOT_PATH . '/routes/api.php'
@@ -74,6 +70,7 @@ class Application
      */
     public function run()
     {
+
         $actionParams = [];
         $controllerName = Config::get('errorController');
         $action = Config::get('errorAction');

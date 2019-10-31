@@ -5,7 +5,16 @@
  * @var stdClass $user
  */
 
+$validateErrors = session('validate_error');
 ?>
+
+<?php if ($validateErrors): ?>
+    <div class="alert alert-danger">
+        <ul>
+            <li><?php echo join('</li><li>', $validateErrors); ?></li>
+        </ul>
+    </div>
+<?php endif; ?>
 
 <input type="hidden" name="_csrf" value="<?php echo csrf(); ?>"/>
 

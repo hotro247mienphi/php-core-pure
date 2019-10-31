@@ -6,6 +6,7 @@ namespace App\Service;
 use App\Core\Mysql;
 use App\Core\QueryBuilder;
 use App\Core\Request;
+use App\Core\Session;
 
 class UserService
 {
@@ -41,6 +42,7 @@ class UserService
             'email' => '',
             'password' => '',
         ];
+
         return ['user' => (object)$user];
     }
 
@@ -50,7 +52,27 @@ class UserService
     public function storeAction()
     {
         $data = Request::all();
+
+        $errors = [];
+        if (empty(arr_get($data, 'name'))) {
+            $errors[] = 'name can not blank.';
+        }
+
+        if (empty(arr_get($data, 'email'))) {
+            $errors[] = 'email can not blank.';
+        }
+
+        if (empty(arr_get($data, 'password'))) {
+            $errors[] = 'password can not blank.';
+        }
+
+        if ($errors) {
+            Session::set('validate_error', $errors);
+            redirect(Request::referer());
+        }
+
         Mysql::insert('users', $data);
+
     }
 
 

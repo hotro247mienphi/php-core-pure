@@ -8,19 +8,27 @@ namespace App\Core;
  */
 class Csrf
 {
-
+    /**
+     * generate
+     */
     public static function generate()
     {
         $csrf = password_hash(time(), PASSWORD_DEFAULT);
         $_SESSION['_csrf'] = $csrf;
-        return $csrf;
     }
 
+    /**
+     * @param string $input
+     * @return bool
+     */
     public static function verify($input = '')
     {
-        return password_verify($input, self::get());
+        return $input === self::get();
     }
 
+    /**
+     * @return mixed|null
+     */
     public static function get()
     {
         return arr_get($_SESSION, '_csrf');

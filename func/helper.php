@@ -3,6 +3,7 @@
 use App\Core\Csrf;
 use App\Core\Route;
 use App\Core\Request;
+use App\Core\Session;
 
 if (!function_exists('arr_get')) {
     /**
@@ -233,6 +234,30 @@ if (!function_exists('is_url')) {
     }
 }
 
+if (!function_exists('redirect')) {
+
+    /**
+     * @param string $url
+     * @param int $code
+     */
+    function redirect($url = '', $code = 302)
+    {
+        header('Location: ' . $url, $code);
+    }
+}
+
+if (!function_exists('session')) {
+
+    /**
+     * @param $key
+     * @return mixed|null
+     */
+    function session($key)
+    {
+        return Session::get($key);
+    }
+}
+
 if (!function_exists('csrf')) {
 
     /**
@@ -240,6 +265,6 @@ if (!function_exists('csrf')) {
      */
     function csrf()
     {
-        return Csrf::generate();
+        return Csrf::get();
     }
 }
