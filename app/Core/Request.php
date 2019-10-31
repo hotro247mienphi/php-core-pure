@@ -32,7 +32,7 @@ class Request
      * @param null $default
      * @return mixed|null
      */
-    protected static function _server($key = '', $default = null){
+    public static function server($key = '', $default = null){
         return arr_get($_SERVER, $key, $default);
     }
 
@@ -40,7 +40,7 @@ class Request
      * @return mixed|null
      */
     public static function referer(){
-        return self::_server('HTTP_REFERER');
+        return self::server('HTTP_REFERER');
     }
 
     /**
@@ -48,7 +48,7 @@ class Request
      */
     public static function method()
     {
-        return strtoupper(self::_server('REQUEST_METHOD', 'GET'));
+        return strtoupper(self::server('REQUEST_METHOD', 'GET'));
     }
 
     /**
@@ -56,7 +56,7 @@ class Request
      */
     public static function queryString()
     {
-        return self::_server('QUERY_STRING');
+        return self::server('QUERY_STRING');
     }
 
     /**
@@ -76,7 +76,7 @@ class Request
         $keys = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
 
         foreach ($keys as $key):
-            if ($result = self::_server($key)) {
+            if ($result = self::server($key)) {
                 return $result;
                 break;
             }
@@ -94,7 +94,7 @@ class Request
      */
     public static function uri()
     {
-        return self::_server('REQUEST_URI');
+        return self::server('REQUEST_URI');
     }
 
     /**
@@ -102,7 +102,7 @@ class Request
      */
     public static function isSecure()
     {
-        return strtolower(self::_server('REQUEST_URI')) === 'on';
+        return strtolower(self::server('REQUEST_URI')) === 'on';
     }
 
     /**
@@ -118,7 +118,7 @@ class Request
      */
     public static function hostname()
     {
-        return self::_server('HTTP_HOST');
+        return self::server('HTTP_HOST');
     }
 
     /**

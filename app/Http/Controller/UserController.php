@@ -30,6 +30,7 @@ class UserController extends Controller
     {
         $this->setTitle('List Users');
         $shared = $this->service->indexAction();
+
         return $this->render('user.index', $shared);
     }
 
@@ -40,8 +41,8 @@ class UserController extends Controller
     public function show($id)
     {
         $this->setTitle('Show User');
-        $data = $this->service->showAction($id);
-        return $this->json($data);
+        $shared = $this->service->showAction($id);
+        return $this->render('user.show', $shared);
     }
 
     /**

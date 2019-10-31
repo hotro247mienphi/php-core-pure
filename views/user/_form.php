@@ -7,6 +7,8 @@
 
 ?>
 
+<input type="hidden" name="_csrf" value="<?php echo csrf(); ?>"/>
+
 <div class="form-group">
     <label>Name</label>
     <input type="text" name="name" value="<?php echo $user->name; ?>" class="form-control"/>

@@ -41,7 +41,6 @@ class UserService
             'email' => '',
             'password' => '',
         ];
-
         return ['user' => (object)$user];
     }
 

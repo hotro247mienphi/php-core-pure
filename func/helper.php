@@ -1,5 +1,6 @@
 <?php
 
+use App\Core\Csrf;
 use App\Core\Route;
 use App\Core\Request;
 
@@ -229,5 +230,16 @@ if (!function_exists('is_url')) {
     function is_url($path = '')
     {
         return $path === get_uri_without_query();
+    }
+}
+
+if (!function_exists('csrf')) {
+
+    /**
+     * @return bool|string
+     */
+    function csrf()
+    {
+        return Csrf::generate();
     }
 }

@@ -31,6 +31,19 @@ class Application
             $_SERVER['X-HTTP-METHOD-OVERRIDE'] = true;
             unset($_POST['_method']);
         }
+
+        $method = strtoupper(arr_get($_SERVER, 'REQUEST_METHOD', 'GET'));
+
+        if ($method !== 'GET') {
+            $csrf = arr_get($_POST, '_csrf');
+
+            if ($csrf === Csrf::get()) {
+                unset($_POST['_csrf']);
+            } else {
+                throw new \Error('token CSRF invalid.');
+            }
+
+        }
     }
 
     /**
