@@ -34,4 +34,16 @@ class Session
     {
         return json_decode(arr_get($_SESSION, self::buiKey($key)));
     }
+
+    /**
+     * clear
+     */
+    public static function clear()
+    {
+        foreach ($_SESSION as $key => $val):
+            if (preg_match('#^' . self::buiKey('') . '#', $key)) {
+                unset($_SESSION[$key]);
+            }
+        endforeach;
+    }
 }

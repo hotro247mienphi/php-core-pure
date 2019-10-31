@@ -93,6 +93,8 @@ class Application
         }
 
         echo call_user_func_array([$controller, $action], $actionParams);
+
+        Session::clear();
     }
 
 }
