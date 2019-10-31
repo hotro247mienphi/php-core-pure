@@ -36,9 +36,24 @@ class UserService
      */
     public function createAction()
     {
+        $user = [
+            'name' => '',
+            'email' => '',
+            'password' => '',
+        ];
+
+        return ['user' => (object)$user];
+    }
+
+    /**
+     * storeAction
+     */
+    public function storeAction()
+    {
         $data = Request::all();
         Mysql::insert('users', $data);
     }
+
 
     /**
      * @param $id

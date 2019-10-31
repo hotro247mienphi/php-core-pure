@@ -10,7 +10,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class DemoCommand extends Command
 {
 
-    protected static $defaultName = 'app:demo';
+    protected static $defaultName = 'cmd:demo';
 
     protected function configure()
     {

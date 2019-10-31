@@ -10,7 +10,7 @@
 <head>
     <meta charset="utf-8"/>
     <title><?php echo $this->title; ?></title>
-    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <link rel="shortcut icon" href="<?php echo public_html('favicon.ico')?>" type="image/x-icon" />
 
     <?php echo $this->generalStyle(); ?>
     <?php echo $this->generateScriptHeader(); ?>

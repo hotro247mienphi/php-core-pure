@@ -10,6 +10,6 @@ return [
         'user'=> env('DB_USERNAME', 'root'),
         'pass'=> env('DB_PASSWORD', ''),
         'name'=> env('DB_DATABASE', 'test'),
-        'charset'=> env('DB_CHARSET', 'utf8'),
+        'charset'=> env('DB_CHARSET', 'utf8mb4'),
     ]
 ];

@@ -1,6 +1,6 @@
-var JsPure = (function (doc) {
+const JsPure = (function (doc) {
 
-    var log = console.log;
+    const log = console.log;
 
     function getById(id) {
         return doc.getElementById(id);

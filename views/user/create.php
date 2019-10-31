@@ -2,27 +2,12 @@
 
 /**
  * @var App\Core\Layout $this
- * @var array $data
+ * @var stdClass $user
  */
 
 ?>
-<form action="/users/store" method="POST">
+<form action="<?php echo route('users.store'); ?>" method="POST">
 
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" class="form-control"/>
-    </div>
-
-    <div class="form-group">
-        <label>Email address</label>
-        <input type="email" name="email" class="form-control"/>
-    </div>
-
-    <div class="form-group">
-        <label>Password</label>
-        <input type="password" name="password" class="form-control"/>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <?php $this->inc('user/_form');?>
 
 </form>

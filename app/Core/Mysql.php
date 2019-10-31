@@ -23,26 +23,21 @@ class Mysql
         if (self::$instance instanceof \PDO) {
             return self::$instance;
         }
-
         self::connect();
-
         return self::$instance;
     }
 
+    /**
+     * connect to database and assign to $instance
+     */
     public static function connect()
     {
         $db = Config::get('db');
-
         try {
-
             self::$instance = new \PDO("mysql:host={$db['host']};dbname={$db['name']};charset={$db['charset']}", $db['user'], $db['pass']);
-
             self::$instance->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-
         } catch (\PDOException $e) {
-
             error_log($e->getMessage(), 3, ERROR_FILE);
-
         }
     }
 
@@ -52,11 +47,8 @@ class Mysql
      */
     public static function trimQuery($sql)
     {
-
         $sql = str_replace(PHP_EOL, '', $sql);
-
         $sql = preg_replace('#(\s+)#', ' ', $sql);
-
         return $sql;
     }
 
@@ -116,7 +108,6 @@ class Mysql
     public static function selectAll($sql = '', $bindParam = [], $bindParamInt = [])
     {
         $stmt = self::_select($sql, $bindParam, $bindParamInt);
-
         return $stmt->fetchAll();
     }
 
@@ -129,7 +120,6 @@ class Mysql
     public static function selectOne($sql = '', $bindParam = [], $bindParamInt = [])
     {
         $stmt = self::_select($sql, $bindParam, $bindParamInt);
-
         return $stmt->fetch();
     }
 
@@ -141,7 +131,6 @@ class Mysql
     public static function findById($table = '', $id = null)
     {
         $sql = sprintf('SELECT * FROM `%s` WHERE `id`=:id', $table);
-        $sql = self::trimQuery($sql);
         $stmt = self::_select($sql, ['id' => $id]);
         return $stmt->fetch();
     }
@@ -154,7 +143,6 @@ class Mysql
      */
     public static function find($table = '', $columns = [], $where = [])
     {
-
         $fields = $fieldsWhere = $bindParams = [];
 
         foreach ($columns as $key => $val):
@@ -168,7 +156,6 @@ class Mysql
         endforeach;
 
         $sql = sprintf('SELECT %s FROM `%s` WHERE %s', $table, join(',', $fields), join(',', $fieldsWhere));
-        $sql = self::trimQuery($sql);
         $stmt = self::_select($sql, $bindParams);
 
         return $stmt->fetchAll();
@@ -190,7 +177,6 @@ class Mysql
         endforeach;
 
         $sql = sprintf('INSERT INTO `%s`(%s) VALUES(%s)', $table, join(',', $fields), join(',', $values));
-
         return self::exec($sql, $bindParams);
     }
 

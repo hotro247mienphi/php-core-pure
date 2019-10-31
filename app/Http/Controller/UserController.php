@@ -29,19 +29,8 @@ class UserController extends Controller
     public function index()
     {
         $this->setTitle('List Users');
-
         $shared = $this->service->indexAction();
-
         return $this->render('user.index', $shared);
-    }
-
-    /**
-     * @return false|string
-     */
-    public function create()
-    {
-        $this->setTitle('Create User');
-        return $this->render('user.create');
     }
 
     /**
@@ -56,12 +45,21 @@ class UserController extends Controller
     }
 
     /**
+     * @return false|string
+     */
+    public function create()
+    {
+        $this->setTitle('Create User');
+        $shared = $this->service->createAction();
+        return $this->render('user.create', $shared);
+    }
+
+    /**
      * store
      */
     public function store()
     {
-        $this->setTitle('Info page');
-        $this->service->createAction();
+        $this->service->storeAction();
         $this->back();
     }
 

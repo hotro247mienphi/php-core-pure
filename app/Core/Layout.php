@@ -195,12 +195,14 @@ class Layout
 
     /**
      * @param $path
+     * @param array $dataExtra
      */
-    public function inc($path)
+    public function inc($path, $dataExtra = [])
     {
         $fullPath = sprintf('%s/%s.php', VIEWS_PATH, $path);
+
         if (file_exists($fullPath)) {
-            include "$fullPath";
+            echo $this->getFileContent($fullPath, array_merge($this->_data, $dataExtra));
         }
     }
 }

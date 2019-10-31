@@ -21,9 +21,7 @@ class HomeController extends Controller
 
         $this->setLayout('custom-layout');
 
-         Console::run(DemoCommand::class, [
-             'name'=> 'thuannd'
-         ]);
+        Console::run(DemoCommand::class, ['name' => 'thuannd']);
 
         return $this->render('home.index');
     }

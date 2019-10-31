@@ -4,20 +4,10 @@
  * @var stdClass $user
  */
 ?>
-<form action="<?php echo route('users.update', ['id'=>$user->id]); ?>" method="POST">
+<form action="<?php echo route('users.update', ['id' => $user->id]); ?>" method="POST">
 
     <input type="hidden" name="_method" value="PATCH"/>
 
-    <div class="form-group">
-        <label>Name</label>
-        <input type="text" name="name" value="<?php echo $user->name; ?>" class="form-control"/>
-    </div>
-
-    <div class="form-group">
-        <label>Email address</label>
-        <input type="email" name="email" value="<?php echo $user->email; ?>" class="form-control"/>
-    </div>
-
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <?php $this->inc('user/_form');?>
 
 </form>
