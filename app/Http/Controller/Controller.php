@@ -3,6 +3,7 @@
 namespace App\Http\Controller;
 
 use App\Core\Layout;
+use App\Core\Request;
 
 /**
  * Class Controller
@@ -52,20 +53,11 @@ class Controller
     }
 
     /**
-     * @param $url
-     * @param int $code
-     */
-    protected function redirect($url, $code = 302)
-    {
-        redirect($url, $code);
-    }
-
-    /**
      * back to url
      */
     protected function back()
     {
-        $this->redirect(arr_get($_SERVER, 'HTTP_REFERER'));
+        redirect(Request::referer());
     }
 
     /**

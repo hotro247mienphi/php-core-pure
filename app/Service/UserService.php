@@ -68,10 +68,9 @@ class UserService
 
         if ($errors) {
             Session::set('validate_error', $errors);
-            redirect(Request::referer());
+        } else {
+            Mysql::insert('users', $data);
         }
-
-        Mysql::insert('users', $data);
 
     }
 
